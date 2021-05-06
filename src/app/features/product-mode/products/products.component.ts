@@ -9,9 +9,15 @@ import {
 import { ProductsModel } from "src/app/models/products";
 import { WebapiService } from "../../service/webapi.service";
 
+import { MatTableDataSource } from "@angular/material/table";
+import { User } from "src/app/models/user";
+import { Router } from "@angular/router";
+import { DropdownService } from "../../ui/service/dropdown.service";
+import { AlertService } from "src/app/ui/alert/alert.service";
+import { ContactService } from "../../service/contact.service";
+import { UserService } from "../../service/user.service";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
   selector: "app-products",
@@ -19,8 +25,8 @@ import { MatTableDataSource } from "@angular/material/table";
   styleUrls: ["./products.component.css"],
 })
 export class ProductsComponent implements OnInit {
-  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   modifyActionForm = new FormGroup({
     name: new FormControl("", [
       // Validators.required,
@@ -44,39 +50,59 @@ export class ProductsComponent implements OnInit {
   productsModel: ProductsModel;
   ListaProdutos: ProductsModel[];
   dataSource: MatTableDataSource<ProductsModel>;
-  displayedColumns: string[] = ["name", "qtd", "price", "description"];
 
-  columnNames = [
-    {
-      id: "qtd",
-      value: "Quantidade",
-    },
-    {
-      id: "name",
-      value: "Produto",
-    },
-    {
-      id: "price",
-      value: "Preço Unitário",
-    },
-    {
-      id: "description",
-      value: "Descrição",
-    },
-    {
-      id:"action",
-      value: "action"
-    }
-  ];
+  displayedColumns: string[] = [
+    "action",
+    "name",
+    "description",
+    "qtd",
+    "price",
+    ];
+  currentUser: User;
+  dataLoading: boolean = true;
+  tipoOperacao : string = "Adcionar Produto"
+  statusFilter = new FormControl("");
+  sourceFilter = new FormControl("");
+  filterValues: any = {
+    status: "",
+    source: "",
+  };
 
-  constructor(private directWebApi: WebapiService) {}
+  // columnNames = [
+  //   {
+  //     id: "qtd",
+  //     value: "Quantidade",
+  //   },
+  //   {
+  //     id: "name",
+  //     value: "Produto",
+  //   },
+  //   {
+  //     id: "price",
+  //     value: "Preço Unitário",
+  //   },
+  //   {
+  //     id: "description",
+  //     value: "Descrição",
+  //   },
+  //   {
+  //     id:"action",
+  //     value: "action"
+  //   }
+  // ];
+
+  constructor(
+    private directWebApi: WebapiService,
+    private userService: UserService,
+    private contactService: ContactService,
+    private alertService: AlertService,
+    private dropdownService: DropdownService,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     this.productsModel = new ProductsModel();
     await this.getProducts();
-    this.dataSource = new MatTableDataSource(this.ListaProdutos);
-    // this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -98,7 +124,9 @@ export class ProductsComponent implements OnInit {
       });
 
     this.dataSource = new MatTableDataSource(this.ListaProdutos);
+     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataLoading = false;
   }
   onSubmit() {
     let prod = new ProductsModel();
@@ -113,7 +141,11 @@ export class ProductsComponent implements OnInit {
         console.log(data);
       })
       .catch((error) => {
-       console.log(error);
+        console.log(error);
       });
+  }
+  clearFilter() {
+    this.sourceFilter.setValue('');
+
   }
 }

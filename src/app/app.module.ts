@@ -16,14 +16,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { ConfirmationDialogComponent } from './ui/confirmation-dialog/confirmation-dialog.component';
 import { JwtInterceptor } from './util/jwt-interceptor';
 import { HttpErrorInterceptor } from './util/http-error-interceptor';
+import { NotFoundComponent } from './NotFound/NotFound.component';
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
     MenuListItemComponent,
     FeaturesComponent,
-    ConfirmationDialogComponent
-  ],
+    ConfirmationDialogComponent,
+      NotFoundComponent
+   ],
   imports: [
     BrowserModule,
     FlexLayoutModule,

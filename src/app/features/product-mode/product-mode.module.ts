@@ -9,7 +9,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import { ProductsComponent } from './products/products.component';
 import { MatTableModule } from '@angular/material/table';
-import {MatPaginator} from '@angular/material/paginator';
+import { MatPaginatorModule} from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { AlertModule } from 'src/app/ui/alert/alert.module';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export const routes = [
   { path: '', pathMatch: 'full', redirectTo: 'products' },
@@ -29,6 +33,11 @@ imports: [
     ReactiveFormsModule,
     MatCardModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    AlertModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild(routes)
 ]
 })

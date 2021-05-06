@@ -1,41 +1,57 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ProductsModel } from '../../models/products';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { ProductsModel } from "../../models/products";
+import { Router } from "@angular/router";
+import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class WebapiService {
   private bearerToken: string;
   private header: HttpHeaders;
-  //private apiURL : string = 'https://loja-crias-api.herokuapp.com';
+  //private apiURL: string = "https://loja-crias-api.herokuapp.com";
   private apiURL: string = 'http://localhost:3000';
+  private options;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) {}
   async loadConfiguration(): Promise<void> {
     this.getToken;
-    this.header = new HttpHeaders({ Authorization: this.bearerToken, 'Content-Type': 'application/json' });
 
+    this.header = new HttpHeaders({
+          'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'GET,POST,OPTIONS,DELETE,PUT',
+    });
+     this.options = { headers: this.header}
   }
 
-
-
-// constructor(private http : HttpClient, private productsModel :ProductsModel ) { }
-async getToken() : Promise<void>{
-  let param = {
-    "email" : "bruno@gmail.com",
-    "password" :"123456"
+  async getToken(): Promise<void> {
+    let param = {
+      email: "bruno@gmail.com",
+      password: "123456",
+    };
+    await this.http
+      .get(`${this.apiURL}/user/login`)
+      .toPromise()
+      .then((data) => {
+        this.bearerToken = data["token"];
+      })
+      .catch((error) => console.log(error.message));
   }
-this.httpClient.get(`${this.apiURL}/user/login`).toPromise()
-.then((data)=> {this.bearerToken = data['token']})
-.catch(error => console.log(error.message))
-}
-  async GetProduts() : Promise<any> {
-    this.loadConfiguration();
-    let retorno;
-  await this.httpClient.get(`${this.apiURL}/products`).toPromise().then(data=> {retorno = data});
-  console.log(retorno)
-  return retorno;
+  async GetProduts(): Promise<any> {
+    debugger
+    let retorno : any;
+    let options = {headers: this.header}
+    const url = `${this.apiURL}` + '/products';
+    await this.http.get<any>(url,options)
+    .toPromise()
+    .then((data) => {retorno = data})
+    .catch((err)=> {console.log(err)});
+
+    console.log(retorno);
+    return retorno;
   }
 
   async SaveProducts(products: ProductsModel): Promise<any> {
@@ -48,19 +64,27 @@ this.httpClient.get(`${this.apiURL}/user/login`).toPromise()
       description: products.description,
       price: products.price,
     };
-    const options = { headers: this.header , params : param};
+    const options = { headers: this.header, params: param };
     debugger;
 
-    await this.httpClient
-      .post(`${this.apiURL}/products`, options )
+    await this.http
+      .post(`${this.apiURL}/products`, options)
       .toPromise()
       .then((data) => {
         ret = data;
       })
       .catch((error) => {
-        debugger
+        debugger;
         console.log(error);
       });
+    return ret;
+  }
+
+  GetMany(): Observable<ProductsModel[]> {
+   const url = `${this.apiURL}` + '/products';
+    //console.log("Fetch my contacts URL is " + url);
+debugger
+    let ret =  this.http.get<ProductsModel[]>(url);
     return ret;
   }
 }
