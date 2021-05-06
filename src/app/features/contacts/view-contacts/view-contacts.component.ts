@@ -28,7 +28,7 @@ export class ViewContactsComponent implements OnInit {
 
   dataSource: MatTableDataSource<Contact>;
   currentUser: User;
-  dataLoading: boolean = true;
+  dataLoading = true;
 
   availableAddressTypes: DropdownOption[] = addressTypes;
   availablePhoneTypes: DropdownOption[] = phoneTypes;
@@ -45,7 +45,7 @@ export class ViewContactsComponent implements OnInit {
   filterValues: any = {
     status: '',
     source: ''
-  }
+  };
 
   constructor(private userService: UserService, private contactService: ContactService,
     private alertService: AlertService, private dropdownService: DropdownService, private router: Router) {
@@ -59,19 +59,21 @@ export class ViewContactsComponent implements OnInit {
 
   private fieldListener() {
     this.statusFilter.valueChanges
+      // tslint:disable-next-line: deprecation
       .subscribe(
         status => {
           this.filterValues.status = status;
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
-      )
+      );
     this.sourceFilter.valueChanges
+      // tslint:disable-next-line: deprecation
       .subscribe(
         source => {
           this.filterValues.source = source;
           this.dataSource.filter = JSON.stringify(this.filterValues);
         }
-      )
+      );
   }
 
   clearFilter() {
@@ -80,12 +82,12 @@ export class ViewContactsComponent implements OnInit {
   }
 
   private createFilter(): (contact: Contact, filter: string) => boolean {
-    let filterFunction = function (contact, filter): boolean {
-      let searchTerms = JSON.parse(filter);
+    const filterFunction = function (contact, filter): boolean {
+      const searchTerms = JSON.parse(filter);
 
       return contact.status.indexOf(searchTerms.status) !== -1
         && contact.source.indexOf(searchTerms.source) !== -1;
-    }
+    };
 
     return filterFunction;
   }
@@ -94,12 +96,13 @@ export class ViewContactsComponent implements OnInit {
   private loadContacts() {
     if (this.currentUser) {
       this.contactService.fetchMyContacts()
+        // tslint:disable-next-line: deprecation
         .subscribe(
           (contacts: Contact[]) => this.handleContacts(contacts),
           err => this.handleContactsError(err)
         );
     } else {
-      this.alertService.error("Problem identifying user!");
+      this.alertService.error('Problem identifying user!');
       this.dataLoading = false;
     }
   }
@@ -114,16 +117,16 @@ export class ViewContactsComponent implements OnInit {
 
   private handleContactsError(err) {
     console.error(err);
-    this.alertService.error("Problem loading contacts!");
+    this.alertService.error('Problem loading contacts!');
   }
 
   editContact(contact: Contact) {
-    let route = '/contacts/edit-contact';
+    const route = '/contacts/edit-contact';
     this.router.navigate([route], { queryParams: { id: contact.id } });
   }
 
   viewContact(contact: Contact) {
-    let route = '/contacts/view-contact';
+    const route = '/contacts/view-contact';
     this.router.navigate([route], { queryParams: { id: contact.id } });
   }
 }

@@ -1,47 +1,47 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   FormGroupDirective,
   NgForm,
   Validators,
-} from "@angular/forms";
-import { ProductsModel } from "src/app/models/products";
-import { WebapiService } from "../../service/webapi.service";
+} from '@angular/forms';
+import { ProductsModel } from 'src/app/models/products';
+import { WebapiService } from '../../service/webapi.service';
 
-import { MatTableDataSource } from "@angular/material/table";
-import { User } from "src/app/models/user";
-import { Router } from "@angular/router";
-import { DropdownService } from "../../ui/service/dropdown.service";
-import { AlertService } from "src/app/ui/alert/alert.service";
-import { ContactService } from "../../service/contact.service";
-import { UserService } from "../../service/user.service";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from '@angular/material/table';
+import { User } from 'src/app/models/user';
+import { Router } from '@angular/router';
+import { DropdownService } from '../../ui/service/dropdown.service';
+import { AlertService } from 'src/app/ui/alert/alert.service';
+import { ContactService } from '../../service/contact.service';
+import { UserService } from '../../service/user.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
-  selector: "app-products",
-  templateUrl: "./products.component.html",
-  styleUrls: ["./products.component.css"],
+  selector: 'app-products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.css'],
 })
 export class ProductsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   modifyActionForm = new FormGroup({
-    name: new FormControl("", [
+    name: new FormControl('', [
       // Validators.required,
       // Validators.email,
     ]),
-    qtd: new FormControl("", [
+    qtd: new FormControl('', [
       // Validators.required,
       // Validators.email,
     ]),
-    description: new FormControl("", [
+    description: new FormControl('', [
       // Validators.required,
       // Validators.email,
     ]),
 
-    price: new FormControl("", [
+    price: new FormControl('', [
       // Validators.required,
       // Validators.email,
     ]),
@@ -52,20 +52,20 @@ export class ProductsComponent implements OnInit {
   dataSource: MatTableDataSource<ProductsModel>;
 
   displayedColumns: string[] = [
-    "action",
-    "name",
-    "description",
-    "qtd",
-    "price",
+    'action',
+    'name',
+    'description',
+    'qtd',
+    'price',
     ];
   currentUser: User;
-  dataLoading: boolean = true;
-  tipoOperacao : string = "Adcionar Produto"
-  statusFilter = new FormControl("");
-  sourceFilter = new FormControl("");
+  dataLoading = true;
+  tipoOperacao = 'Adcionar Produto';
+  statusFilter = new FormControl('');
+  sourceFilter = new FormControl('');
   filterValues: any = {
-    status: "",
-    source: "",
+    status: '',
+    source: '',
   };
 
   // columnNames = [
@@ -129,7 +129,7 @@ export class ProductsComponent implements OnInit {
     this.dataLoading = false;
   }
   onSubmit() {
-    let prod = new ProductsModel();
+    const prod = new ProductsModel();
     (prod.name = this.modifyActionForm.value.name),
       (prod.description = this.modifyActionForm.value.description),
       (prod.price = this.modifyActionForm.value.price),
