@@ -10,6 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertModule } from '../ui/alert/alert.module';
 
+
 export const routes = [
     { path: '', component: LoginComponent }
 ];

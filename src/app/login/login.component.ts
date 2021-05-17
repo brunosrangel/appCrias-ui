@@ -8,6 +8,22 @@ import { UserService } from "../features/service/user.service";
 import { AlertService } from "../ui/alert/alert.service";
 import { HttpErrorResponse } from "@angular/common/http";
 
+// import { SocialAuthService } from 'lib';
+// import { SocialUser } from 'lib';
+// import {
+//   GoogleLoginProvider,
+//   FacebookLoginProvider,
+//   AmazonLoginProvider,
+//   VKLoginProvider,
+//   MicrosoftLoginProvider
+// } from 'lib';
+import {
+  FacebookLoginProvider,
+  GoogleLoginProvider,
+  SocialAuthService,
+  SocialUser,
+} from "angularx-social-login";
+
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
@@ -16,6 +32,9 @@ import { HttpErrorResponse } from "@angular/common/http";
 export class LoginComponent implements OnInit {
   form: FormGroup;
   formSubmitted: boolean = false;
+  user: SocialUser;
+  GoogleLoginProvider = GoogleLoginProvider;
+  loggedIn: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -24,7 +43,8 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private urlService: UrlService,
     private userService: UserService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private authService: SocialAuthService
   ) {}
 
   ngOnInit() {
@@ -34,6 +54,21 @@ export class LoginComponent implements OnInit {
       username: ["", Validators.compose([Validators.required])],
       password: ["", Validators.compose([Validators.required])],
     });
+  }
+
+  async loginSocial(username: string, password: string) {
+    this.alertService.clear();
+    let jwtRet: JwtResponse;
+    
+    await this.authenticationService
+      .login(username, password)
+      .then((jwt) => {
+        this.handleLoginResponse(jwt);
+      })
+      .catch((err) => {
+        this.handleLoginError(err);
+        this.formSubmitted = false;
+      });
   }
 
   async onSubmit(loginForm) {
@@ -54,7 +89,6 @@ export class LoginComponent implements OnInit {
           this.handleLoginError(err);
           this.formSubmitted = false;
         });
-      console.log(jwtRet);
     } else {
       this.formSubmitted = false;
     }
@@ -93,5 +127,25 @@ export class LoginComponent implements OnInit {
     }
 
     this.router.navigate([returnUrl], queryParams);
+  }
+  signInWithGoogle(): void {
+    let userData;
+    this.authService
+      .signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then((data) => {
+        userData = data;
+      })
+      .catch((err) => console.log(err));
+  }
+
+  signInWithFB(): void {
+    let user;
+    this.authService
+      .signIn(FacebookLoginProvider.PROVIDER_ID)
+      .then((data) => {
+        user = data;
+        debugger;
+      })
+      .catch((error) => console.log(error));
   }
 }

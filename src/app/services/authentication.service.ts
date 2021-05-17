@@ -8,10 +8,12 @@ import { Router } from "@angular/router";
 import { DateService } from "./date.service";
 import jwt_decode from "jwt-decode";
 import { User, UserModel } from "../models/user";
+import { promise } from "selenium-webdriver";
 
 const TOKEN_NAME = "id_token";
 const EXPIRES_AT = "expires_at";
 const apiURL = "https://loja-crias-api.herokuapp.com/users/login";
+const checkLogin = "https://loja-crias-api.herokuapp.com/users/login";
 
 @Injectable({ providedIn: "root" })
 export class AuthenticationService {
@@ -22,6 +24,16 @@ export class AuthenticationService {
     private dateService: DateService
   ) {}
 
+  async LoginSocial(username : string, password: string) : Promise<any>{
+    let jwtResponse: JwtResponseC = new JwtResponseC();
+    let jwt: JwtResponse;
+    let user: UserModel = new UserModel();
+    let param = { email: username, password: password };
+  }
+async CheckLogin (username: string, password: string) : Promise<any>{
+  let param = { email: username, password: password };
+  
+}
   async login(username: string, password: string): Promise<JwtResponse> {
     let jwtResponse: JwtResponseC = new JwtResponseC();
     let jwt: JwtResponse;

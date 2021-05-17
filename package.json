@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "~10.1.5",
     "@angular/router": "~10.1.5",
     "@nativescript/schematics": "^10.1.0",
+    "angularx-social-login": "^3.5.7",
     "core-js": "^2.5.4",
     "jwt-decode": "^3.1.2",
     "libphonenumber-js": "^1.9.6",

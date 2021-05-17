@@ -2,57 +2,82 @@
   <div fxLayout="row wrap">
     <div fxFlex="50" fxFlex.lt-md="100" fxLayout="column">
       <div fxLayoutAlign="center">
-        <img style="margin-top:30px" src="/assets/img/logo/careydevelopment-logo-sm.png" />
+        <img style="margin-top: 30px" src="/assets/img/logo/sistema.png" />
       </div>
 
-      <div fxLayout="row" fxLayoutAlign="center">
+      <!-- <div fxLayout="row" fxLayoutAlign="center">
         <h2 style="margin-top:100px" class="my-primary-text">App Crias</h2>
-      </div>
+      </div> -->
 
       <div fxLayout="row" fxLayoutAlign="center">
-        <img src="/assets/img/vector/office-env2.jpg" />
-      </div>
-
-      <div fxLayout="row" fxLayoutAlign="center">
-        <a href='https://www.freepik.com/vectors/business'>Business vector created by pikisuperstar - www.freepik.com</a>
+        <img src="/assets/img/logo/imagem_crias.png" />
       </div>
     </div>
 
-    <div fxFlex="50" fxFlex.lt-md="100" fxLayout="column" class="mat-app-background">
-      <div fxLayout="column" fxLayoutAlign="center" style="margin-top:30px">
-        <div fxLayout="row" fxLayoutAlign="center">
+    <div
+      fxFlex="50"
+      fxFlex.lt-md="100"
+      fxLayout="column"
+      class="mat-app-background"
+    >
+      <div fxLayout="column" fxLayoutAlign="center" style="margin-top: 30px">
+        <!-- <div fxLayout="row" fxLayoutAlign="center">
           <h3>Bem vindo ao APP Crias </h3>
-        </div>
+        </div> -->
 
         <div fxLayout="row" fxLayoutAlign="center">
-          <h4>Please sign in below</h4>
+          <h4>Por favor efetuar o login</h4>
         </div>
       </div>
 
       <div fxLayout="column" fxLayoutAlign="center">
         <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
-          <div style="margin-bottom:15px; height:75px">
+          <div style="margin-bottom: 15px; height: 75px">
             <alert></alert>
           </div>
           <div fxLayoutAlign="center">
-            <mat-form-field style="width:50%" appearance="fill">
+            <mat-form-field style="width: 50%" appearance="fill">
               <mat-label>Enter username</mat-label>
-              <input formControlName="username" matInput>
-              <mat-error *ngIf="form.controls['username'].invalid">Please enter a valid username</mat-error>
+              <input formControlName="username" matInput />
+              <mat-error *ngIf="form.controls['username'].invalid"
+                >Please enter a valid username</mat-error
+              >
             </mat-form-field>
           </div>
-          <div fxLayoutAlign="center" style="margin-top:10px">
-            <mat-form-field style="width:50%" appearance="fill">
+          <div fxLayoutAlign="center" style="margin-top: 10px">
+            <mat-form-field style="width: 50%" appearance="fill">
               <mat-label>Enter password</mat-label>
-              <input type="password" formControlName="password" matInput>
-              <mat-error *ngIf="form.controls['password'].invalid">Please enter a valid password</mat-error>
+              <input type="password" formControlName="password" matInput />
+              <mat-error *ngIf="form.controls['password'].invalid"
+                >Please enter a valid password</mat-error
+              >
             </mat-form-field>
           </div>
-          <div fxLayoutAlign="center" style="margin-top:20px">
-            <button *ngIf="!formSubmitted" [disabled]="!form.valid" type="submit" mat-raised-button color="primary">Login</button>
+          <div fxLayoutAlign="center" style="margin-top: 20px">
+            <button
+              *ngIf="!formSubmitted"
+              [disabled]="!form.valid"
+              type="submit"
+              mat-raised-button
+              color="primary"
+            >
+              Login
+            </button>
             <mat-spinner *ngIf="formSubmitted" [diameter]="50"></mat-spinner>
           </div>
         </form>
+        <div>
+          <div>
+            <span> Entrar com Rede Social</span>
+          </div>
+
+          <button mat-button color="primary" (click)="signInWithGoogle()">
+            <img src="../../assets/icons8-google-24.png" />
+          </button>
+          <button mat-button color="primary" (click)="signInWithFB()">
+            <img src="../../assets/icons8-facebook-24.png" />
+          </button>
+        </div>
       </div>
     </div>
   </div>

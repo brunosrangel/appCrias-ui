@@ -1,31 +1,38 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { MenuListItemComponent } from './features/ui/menu-list-item/menu-list-item.component';
-import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FeaturesComponent } from './features/features.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { ConfirmationDialogComponent } from './ui/confirmation-dialog/confirmation-dialog.component';
-import { JwtInterceptor } from './util/jwt-interceptor';
-import { HttpErrorInterceptor } from './util/http-error-interceptor';
-import { NotFoundComponent } from './NotFound/NotFound.component';
+import { BrowserModule } from "@angular/platform-browser";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatListModule } from "@angular/material/list";
+import { MatIconModule } from "@angular/material/icon";
+import { MenuListItemComponent } from "./features/ui/menu-list-item/menu-list-item.component";
+import { NgModule } from "@angular/core";
+import { AppComponent } from "./app.component";
+import { AppRoutingModule } from "./app-routing.module";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { FeaturesComponent } from "./features/features.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatButtonModule } from "@angular/material/button";
+import { ConfirmationDialogComponent } from "./ui/confirmation-dialog/confirmation-dialog.component";
+import { JwtInterceptor } from "./util/jwt-interceptor";
+import { HttpErrorInterceptor } from "./util/http-error-interceptor";
+import { NotFoundComponent } from "./NotFound/NotFound.component";
+
+import {
+  GoogleLoginProvider,
+  FacebookLoginProvider,
+  SocialLoginModule,
+  SocialAuthServiceConfig,
+} from "angularx-social-login";
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
     MenuListItemComponent,
     FeaturesComponent,
     ConfirmationDialogComponent,
-      NotFoundComponent
-   ],
+    NotFoundComponent,
+  ],
   imports: [
     BrowserModule,
     FlexLayoutModule,
@@ -37,12 +44,55 @@ import { NotFoundComponent } from './NotFound/NotFound.component';
     MatListModule,
     MatIconModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    SocialLoginModule,
   ],
+  //   providers: [
+  //     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  //     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+  //     [
+  //       {
+
+  //         provide: 'SocialAuthServiceConfig',
+  //         useValue: {
+  //           autoLogin: false,
+  //           providers: [
+  //             {
+  //               id: GoogleLoginProvider.PROVIDER_ID,
+  //               provider: new GoogleLoginProvider(
+  //                 'clientId'
+  //               )
+  //             },
+  //             {
+  //               id: FacebookLoginProvider.PROVIDER_ID,
+  //               provider: new FacebookLoginProvider('clientId')
+  //             }
+  //           ]
+  //         } as SocialAuthServiceConfig,
+
+  //   ]
+  // ],
+
   providers: [
+    {
+      provide: "SocialAuthServiceConfig",
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider("205795066712-hnhs12bsm3kpj4qvvupj4ekdq5soitad.apps.googleusercontent.com"),
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider("800768753896037"),
+          },
+        ],
+      } as SocialAuthServiceConfig,
+    },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
   ],
-    bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
