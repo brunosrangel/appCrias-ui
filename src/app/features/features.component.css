@@ -19,4 +19,28 @@ button.menu-button {
   border: none;
   outline: none;
 }
+.round {
+  border-radius: 100%;
+  overflow: hidden;
+  width:64px;
+  height: 64px;
+  background: black;
+  float: left;
+}
 
+img {
+  width:64px;
+  height: 64px;
+}
+.detail{
+  float: right !important;
+  padding-left: 40px;
+  width:64px;
+  height: 64px;
+}
+.textDetail
+{
+  width:64px;
+  height: 64px;
+  padding-top: 16px;
+}

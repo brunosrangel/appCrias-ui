@@ -1,8 +1,23 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="sidenav.toggle()" class="menu-button" fxHide fxShow.lt-md>
+  <button mat-icon-button (click)="sidenav.toggle()" class="menu-button" >
     <mat-icon>menu</mat-icon>
   </button>
-  <span>CRM Application</span>
+  <span>Sistema Crias</span>
+
+  <div class="detail">
+
+
+  <div class="round">
+    <img src="{{ urlImage }}" />
+  </div>
+<div>
+  <div class="textDetail">
+  Olá {{userName}}  
+  </div>
+
+
+</div>
+</div>
 </mat-toolbar>
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" [opened]="opened">

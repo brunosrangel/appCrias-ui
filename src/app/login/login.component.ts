@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { JwtResponse } from "../models/jwt-response";
 import { UrlService } from "../services/url.service";
 import { UserService } from "../features/service/user.service";
+import { UsersService } from "../services/user.service";
 import { AlertService } from "../ui/alert/alert.service";
 import { HttpErrorResponse } from "@angular/common/http";
 
@@ -23,6 +24,7 @@ import {
   SocialAuthService,
   SocialUser,
 } from "angularx-social-login";
+import { UserModel } from "../models/user";
 
 @Component({
   selector: "app-login",
@@ -35,7 +37,7 @@ export class LoginComponent implements OnInit {
   user: SocialUser;
   GoogleLoginProvider = GoogleLoginProvider;
   loggedIn: boolean;
-
+  datauser = new UserModel();
   constructor(
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
@@ -44,7 +46,8 @@ export class LoginComponent implements OnInit {
     private urlService: UrlService,
     private userService: UserService,
     private alertService: AlertService,
-    private authService: SocialAuthService
+    private authService: SocialAuthService,
+    private _usersService: UsersService
   ) {}
 
   ngOnInit() {
@@ -56,12 +59,35 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  async loginSocial(username: string, password: string) {
+  async loginSocial(User: UserModel) {
     this.alertService.clear();
-    let jwtRet: JwtResponse;
-    
+    let resp;
     await this.authenticationService
-      .login(username, password)
+      .CheckLogin(User.email, User.password)
+      .then((jwt) => {
+        resp = jwt;
+        if (jwt.messageId == 1) {
+          this._usersService
+            .CreateUserSocial(this.datauser)
+            .then((ret) => {
+              this.RunAuth();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+        if (jwt.messageId == 5) {
+          this.RunAuth();
+        }
+      })
+      .catch((err) => {
+        this.handleLoginError(err);
+        this.formSubmitted = false;
+      });
+  }
+  RunAuth() {
+    this.authenticationService
+      .login(this.datauser.email, this.datauser.password)
       .then((jwt) => {
         this.handleLoginResponse(jwt);
       })
@@ -70,7 +96,6 @@ export class LoginComponent implements OnInit {
         this.formSubmitted = false;
       });
   }
-
   async onSubmit(loginForm) {
     this.alertService.clear();
     this.formSubmitted = true;
@@ -130,10 +155,25 @@ export class LoginComponent implements OnInit {
   }
   signInWithGoogle(): void {
     let userData;
+
     this.authService
       .signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then((data) => {
+      .then(async (data) => {
         userData = data;
+        this.datauser.email = data.email;
+        this.datauser.idToken = data.idToken;
+        this.datauser.imageUrl = data.photoUrl;
+        this.datauser.password = data.id;
+        (this.datauser.status = 5),
+          (this.datauser.nome = data.name),
+          (this.datauser.perfil = 0),
+          (this.datauser.authToken = data.authToken);
+
+        await this.loginSocial(this.datauser)
+          .then()
+          .catch((err) => {
+            this.alertService.error(err);
+          });
       })
       .catch((err) => console.log(err));
   }
@@ -144,8 +184,7 @@ export class LoginComponent implements OnInit {
       .signIn(FacebookLoginProvider.PROVIDER_ID)
       .then((data) => {
         user = data;
-        debugger;
       })
-      .catch((error) => console.log(error));
+      .catch((error) => this.alertService.error(error));
   }
 }

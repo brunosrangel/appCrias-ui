@@ -1,0 +1,11 @@
+  .round {
+    border-radius: 100%;
+    overflow: hidden;
+    height: 100px;
+    width:100px;
+    background: black;
+  }
+
+  img {
+    width: 100%;
+  }

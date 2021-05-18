@@ -2,7 +2,7 @@
   <div fxLayout="row wrap">
     <div fxFlex="100" fxLayout="column">
       <div>
-        <h4>Account Info</h4>
+        <h4>Informações Gerais</h4>
       </div>
       <div style="margin-bottom:20px">
         <alert></alert>
@@ -14,44 +14,53 @@
         <div>
           <form [formGroup]="form" (ngSubmit)="update()">
             <div class="vertical-form-field">
-              <div class="label">First Name</div>
+              <div class="label">Nome Completo</div>
               <div>
                 <mat-form-field appearance="fill" class="no-label-field" style="width:30%">
-                  <input formControlName="firstName" matInput placeholder="Enter first name" maxlength="50">
-                  <mat-error *ngIf="form.controls['firstName'].invalid">Please enter a valid first name</mat-error>
+                  <input formControlName="nome"   matInput placeholder="Enter first name" maxlength="50">
+                  <mat-error *ngIf="form.controls['nome'].invalid">O nome é importante !</mat-error>
                 </mat-form-field>
               </div>
             </div>
 
             <div class="vertical-form-field">
-              <div class="label">Last Name</div>
+              <div class="label">Email</div>
               <div>
                 <mat-form-field appearance="fill" class="no-label-field" style="width:30%">
-                  <input formControlName="lastName" matInput placeholder="Enter last name" maxlength="50">
-                  <mat-error *ngIf="form.controls['lastName'].invalid">Please enter a valid last name</mat-error>
+                  <input formControlName="email" matInput placeholder="Email é importante" maxlength="50">
+                  <mat-error *ngIf="form.controls['email'].invalid">Email é importante</mat-error>
                 </mat-form-field>
               </div>
             </div>
 
             <div class="vertical-form-field">
-              <div class="label">Street 1</div>
+              <div class="label">Telefone</div>
               <div>
                 <mat-form-field appearance="fill" class="no-label-field" style="width:50%">
-                  <input formControlName="street1" matInput placeholder="Enter street 1 address" maxlength="80">
-                  <mat-error *ngIf="form.controls['street1'].invalid">Please enter a valid street name</mat-error>
+                  <input formControlName="telefone" matInput placeholder="Preencha o telefone" maxlength="20">
+                  <mat-error *ngIf="form.controls['telefone'].invalid">Telefone é importante</mat-error>
                 </mat-form-field>
               </div>
             </div>
-
             <div class="vertical-form-field">
-              <div class="label">Street 2</div>
+              <div class="label">Endereço Completo</div>
               <div>
                 <mat-form-field appearance="fill" class="no-label-field" style="width:50%">
-                  <input formControlName="street2" matInput placeholder="Enter street 2 address" maxlength="80">
+                  <input formControlName="cep" matInput placeholder="preencha o cep"  (blur)="getEndereco(form.controls['cep'].value)" maxlength="100">
+                  <mat-error *ngIf="form.controls['cep'].invalid">Endereço é importante</mat-error>
                 </mat-form-field>
               </div>
             </div>
-
+             <div class="vertical-form-field">
+              <div class="label">Endereço Completo</div>
+              <div>
+                <mat-form-field appearance="fill" class="no-label-field" style="width:50%">
+                  <input formControlName="endereco" matInput disabled>
+                  <mat-error *ngIf="form.controls['endereco'].invalid">Endereço é importante</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+<!--
             <div class="vertical-form-field">
               <div class="label">City</div>
               <div>
@@ -118,7 +127,7 @@
                   <mat-error *ngIf="form.controls['phoneNumber'].invalid">Please enter a valid phone number</mat-error>
                 </mat-form-field>
               </div>
-            </div>
+            </div>-->
             <div style="margin-top:10px; margin-bottom:10px">
               <button type="submit" *ngIf="!formSubmitted" [disabled]="!form.valid" mat-raised-button color="primary">Save Info</button>
               <mat-spinner *ngIf="formSubmitted" [diameter]="50"></mat-spinner>

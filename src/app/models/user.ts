@@ -1,31 +1,61 @@
 export interface User {
-	id: string
-	firstName: string;
-	lastName: string;
-	street1: string;
-	street2: string;
-	city: string;
-	state: string;
-	zip: string;
-	email: string;
-	phoneNumber: string;
-	authorityNames: string[];
-	username: string;
-	country: string;
+  id: string;
+  email: string;
+  username: string;
+  nome: string;
+  password: string;
+  perfil: number;
+  idToken: string;
+  createAt: Date;
+  updateAt: Date;
+  status: number;
+  imageUrl: string;
+  authToken: string;
+  UserDetail: UserDetail;
 }
 
 export class UserModel {
-	id: string
-	firstName: string;
-	lastName: string;
-	street1: string;
-	street2: string;
-	city: string;
-	state: string;
-	zip: string;
-	email: string;
-	phoneNumber: string;
-	authorityNames: string[];
-	username: string;
-	country: string;
+  id: string;
+  email: string;
+  username: string;
+  nome: string;
+  password: string;
+  perfil: number;
+  idToken: string;
+  createAt: Date;
+  updateAt: Date;
+  status: number;
+  imageUrl: string;
+  authToken: string;
+  UserDetail: UserDetailModel;
+}
+
+export class UserDetailModel {
+  id: string;
+  dataNascimento: Date;
+  dataIniciacao: Date;
+  orixa: string;
+  telefone: string;
+  profissao: string;
+  escolaridade: string;
+  diaPagamento: Date;
+  valorPagamento: number;
+  endereco: string;
+  empregado: boolean;
+  obs: string;
+}
+
+export interface UserDetail {
+  id: string;
+  dataNascimento: Date;
+  dataIniciacao: Date;
+  orixa: string;
+  telefone: string;
+  profissao: string;
+  escolaridade: string;
+  diaPagamento: Date;
+  valorPagamento: number;
+  endereco: string;
+  empregado: boolean;
+  obs: string;
 }

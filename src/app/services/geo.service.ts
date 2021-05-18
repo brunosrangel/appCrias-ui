@@ -1,20 +1,24 @@
-import { Injectable } from '@angular/core';
-import { Country } from '../models/country';
-import { State } from '../models/state';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { Injectable } from "@angular/core";
+import { Country } from "../models/country";
+import { State } from "../models/state";
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from "@angular/common/http";
+import { map } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { environment } from "../../environments/environment";
+import { Endereco } from "../models/endereco";
 
 const baseUrl: string = environment.baseGeoServiceUrl;
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class GeoService {
-
   private _allCountries: Country[];
   private _allStates: State[];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   get allCountries() {
     return this._allCountries;
@@ -28,35 +32,39 @@ export class GeoService {
     let countriesObservable$ = this.http.get<Country[]>(`${baseUrl}/countries`);
 
     return countriesObservable$.pipe(
-      map(countries => {
+      map((countries) => {
         this._allCountries = countries;
         return countries;
       })
-    )
+    );
   }
 
   initializeAllStates(): Observable<State[]> {
     let statesObservable$ = this.http.get<State[]>(`${baseUrl}/states`);
 
     return statesObservable$.pipe(
-      map(states => {
+      map((states) => {
         this._allStates = states;
         return states;
       })
-    )
+    );
   }
+  EnderecoPorCep(cep: string): Observable<Endereco>{
+      const url = `https://viacep.com.br/ws/${cep}/json/`;
+    return this.http.get<Endereco>(url);
 
+  }
   private handleError(error: HttpErrorResponse) {
     console.error("Problem trying to retrieve geo array!", error);
-  };
+  }
 
   findCountryCodeByTwoLetterAbbreviation(abbreviation: string): string {
     let code: string = null;
 
     if (!this.allCountries) {
       this.initializeAllCountries().subscribe(
-        (countries: Country[]) => code = this.findCountryCode(abbreviation)
-      )
+        (countries: Country[]) => (code = this.findCountryCode(abbreviation))
+      );
     } else {
       code = this.findCountryCode(abbreviation);
     }

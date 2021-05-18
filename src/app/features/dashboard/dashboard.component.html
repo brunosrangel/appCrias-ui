@@ -1,1 +1,10 @@
-<p>dashboard works!</p>
+<!--
+  <div class="round">
+    <img src="{{ urlImage }}" />
+  </div> -->
+<div>
+ <h2>Olá {{userName}}</h2>
+ <div *ngIf="userDetail.status == 5">
+   Seu cadastro encontra-se desatualizado.
+ </div>
+</div>

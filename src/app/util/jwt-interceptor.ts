@@ -31,7 +31,6 @@ export class JwtInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     token: string
   ): HttpRequest<any> {
-    debugger;
     request = request.clone({
       setHeaders: {
       // 'Content-Type': 'application/json',

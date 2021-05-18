@@ -1,35 +1,150 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Country } from '../../../models/country';
-import { State } from '../../../models/state';
-import { User } from '../../../models/user';
-import { GeoService } from '../../../services/geo.service';
-import { AlertService } from '../../../ui/alert/alert.service';
-import { UserService } from '../../service/user.service';
+import { HttpErrorResponse } from "@angular/common/http";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+} from "@angular/forms";
+import { Country } from "../../../models/country";
+import { State } from "../../../models/state";
+import { User, UserModel } from "../../../models/user";
+import { GeoService } from "../../../services/geo.service";
+import { AlertService } from "../../../ui/alert/alert.service";
+import { UserService } from "../../service/user.service";
+import { UsersService } from "../../../services/user.service";
+import { Endereco } from "src/app/models/endereco";
+
+const TOKEN_NAME = "id_token";
+const USER_NAME = "user_name";
+const USER_PROFILE = "user_profile";
+const USER_EMAIL = "user_email";
 
 @Component({
-  selector: 'app-account-info',
-  templateUrl: './account-info.component.html',
-  styleUrls: ['./account-info.component.css']
+  selector: "app-account-info",
+  templateUrl: "./account-info.component.html",
+  styleUrls: ["./account-info.component.css"],
 })
 export class AccountInfoComponent implements OnInit {
-
-  form: FormGroup;
   states: State[] = [];
   countries: Country[] = [];
   formSubmitted: boolean = false;
-  user: User = {} as User;
+  user: UserModel = new UserModel();
   dataLoading: boolean = true;
+  userName: string;
+  userDetail: User;
+  searchAddress: Endereco;
+  form = new FormGroup({
+    dataIniciacao: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    dataNascimento: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    diaPagamento: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
 
-  constructor(private fb: FormBuilder, private geoService: GeoService,
-    private userService: UserService, private alertService: AlertService) { }
+    email: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    empregado: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    cep: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    endereco: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    escolaridade: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    nome: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    obs: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    orixa: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    profissao: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    telefone: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+    valorPagamento: new FormControl("", [
+      // Validators.required,
+      // Validators.email,
+    ]),
+  });
 
-  ngOnInit(): void {
-    this.initGeos();
-    this.initForm();
+  constructor(
+    private fb: FormBuilder,
+    private geoService: GeoService,
+    private userService: UserService,
+    private alertService: AlertService,
+    private _userservice: UsersService
+  ) {}
+
+  async ngOnInit(): Promise<void> {
+    this.userName = localStorage.getItem(USER_NAME);
+    await this.getUserDetail();
+
+    this.form.patchValue({
+      nome: this.userDetail["nome"],
+      email: this.userDetail["email"],
+      // description: 'spome description'
+    });
   }
+  async getUserDetail() {
+    await this._userservice
+      .getUserInformation(localStorage.getItem(USER_EMAIL))
+      .then((dt) => {
+        this.userDetail = dt;
+      })
+      .catch((err) => console.log(err))
+      .finally(() => (this.dataLoading = false));
+  }
+  getEndereco(cep: string) {
+    let dt: any;
 
+    this.geoService.EnderecoPorCep(cep).subscribe(
+      (address) => {
+        if (address.erro === true) {
+          this.searchAddress = undefined;
+          this.alertService.error("Cep Não encontrado.", "Ops...");
+        } else {
+          this.searchAddress = address;
+          debugger
+        }
+      },
+      (error) => {
+        this.alertService.error("Error: ${error.message}.", "Ops...");
+        this.searchAddress = undefined;
+      }
+    );
+
+  }
+  preecheEnderco()
+  {
+    
+  }
   private initGeos() {
     this.countries = this.geoService.allCountries;
     this.states = this.geoService.allStates;
@@ -42,17 +157,15 @@ export class AccountInfoComponent implements OnInit {
   }
 
   private loadGeos() {
-    this.geoService.initializeAllStates()
-      .subscribe(
-        (states: State[]) => this.handleStateResponse(states),
-        err => this.handleGeoError(err)
-      );
+    this.geoService.initializeAllStates().subscribe(
+      (states: State[]) => this.handleStateResponse(states),
+      (err) => this.handleGeoError(err)
+    );
 
-    this.geoService.initializeAllCountries()
-      .subscribe(
-        (countries: Country[]) => this.handleCountryResponse(countries),
-        err => this.handleGeoError(err)
-      );
+    this.geoService.initializeAllCountries().subscribe(
+      (countries: Country[]) => this.handleCountryResponse(countries),
+      (err) => this.handleGeoError(err)
+    );
   }
 
   private handleStateResponse(states: State[]) {
@@ -69,23 +182,64 @@ export class AccountInfoComponent implements OnInit {
     console.error("Problem getting geographies!", err);
   }
 
-  private initForm() {
-    this.user = this.userService.user;
-    if (!this.user) this.user = {} as User;
+  // private initForm() {
 
-    this.form = this.fb.group({
-      'firstName': [this.user.firstName, Validators.compose([Validators.required])],
-      'lastName': [this.user.lastName, Validators.compose([Validators.required])],
-      'street1': [this.user.street1, Validators.compose([Validators.required, Validators.minLength(4)])],
-      'street2': [this.user.street2],
-      'city': [this.user.city, Validators.compose([Validators.required])],
-      'state': [this.user.state, Validators.compose([Validators.required])],
-      'zip': [this.user.zip, Validators.compose([Validators.required, Validators.minLength(5)])],
-      'country': [this.user.country, Validators.compose([Validators.required])],
-      'email': [this.user.email, Validators.compose([Validators.required, Validators.pattern("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")])],
-      'phoneNumber': [this.user.phoneNumber, Validators.compose([Validators.required, Validators.minLength(5)])]
-    });
-  }
+  //   this.form = new FormGroup({
+  //     dataIniciacao: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     dataNascimento: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     diaPagamento: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+
+  //     email: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     empregado: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     endereco: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     escolaridade: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     nome: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     obs: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     orixa: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     profissao: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     telefone: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //     valorPagamento: new FormControl("", [
+  //       // Validators.required,
+  //       // Validators.email,
+  //     ]),
+  //   });
+  // }
 
   update() {
     this.formSubmitted = true;
@@ -94,11 +248,10 @@ export class AccountInfoComponent implements OnInit {
 
     let userToSubmit: User = this.createUserToSubmit();
 
-    this.userService.update(this.user.id, userToSubmit)
-      .subscribe(
-        (updatedUser: User) => this.handleUserUpdateResponse(updatedUser),
-        err => this.handleUserUpdateError(err)
-      );
+    this.userService.update(this.user.id, userToSubmit).subscribe(
+      (updatedUser: User) => this.handleUserUpdateResponse(updatedUser),
+      (err) => this.handleUserUpdateError(err)
+    );
   }
 
   private handleUserUpdateResponse(updatedUser: User) {
@@ -114,7 +267,7 @@ export class AccountInfoComponent implements OnInit {
   private handleUserUpdateError(err: Error) {
     console.error("Problem updating user!", err);
     this.alertService.error("Problem updating user info!");
-    this.scrollToTop()
+    this.scrollToTop();
     this.formSubmitted = false;
 
     this.showServerSideErrors(err);
@@ -129,7 +282,7 @@ export class AccountInfoComponent implements OnInit {
 
         for (let i = 0; i < allErrors.length; i++) {
           let currentError = allErrors[i];
-          this.form.controls[currentError.field].setErrors({ 'incorrect': true });
+          this.form.controls[currentError.field].setErrors({ incorrect: true });
         }
       }
 
@@ -138,28 +291,28 @@ export class AccountInfoComponent implements OnInit {
   }
 
   private scrollToTop() {
-    const element = document.querySelector('mat-sidenav-content') || window;
+    const element = document.querySelector("mat-sidenav-content") || window;
     element.scrollTo(0, 0);
   }
 
   private createUserToSubmit(): User {
     let userToSubmit: User = {} as User;
 
-    userToSubmit.city = this.form.controls['city'].value;
-    userToSubmit.email = this.form.controls['email'].value;
-    userToSubmit.firstName = this.form.controls['firstName'].value;
-    userToSubmit.lastName = this.form.controls['lastName'].value;
-    userToSubmit.phoneNumber = this.form.controls['phoneNumber'].value;
-    userToSubmit.state = this.form.controls['state'].value;
-    userToSubmit.street1 = this.form.controls['street1'].value;
-    userToSubmit.street2 = this.form.controls['street2'].value;
-    userToSubmit.zip = this.form.controls['zip'].value;
-    userToSubmit.country = this.form.controls['country'].value;
+    // userToSubmit.city = this.form.controls['city'].value;
+    // userToSubmit.email = this.form.controls['email'].value;
+    // userToSubmit.firstName = this.form.controls['firstName'].value;
+    // userToSubmit.lastName = this.form.controls['lastName'].value;
+    // userToSubmit.phoneNumber = this.form.controls['phoneNumber'].value;
+    // userToSubmit.state = this.form.controls['state'].value;
+    // userToSubmit.street1 = this.form.controls['street1'].value;
+    // userToSubmit.street2 = this.form.controls['street2'].value;
+    // userToSubmit.zip = this.form.controls['zip'].value;
+    // userToSubmit.country = this.form.controls['country'].value;
 
-    //add back data not shown on the form
-    userToSubmit.id = this.user.id;
-    userToSubmit.authorityNames = this.user.authorityNames;
-    userToSubmit.username = this.user.username;
+    // //add back data not shown on the form
+    // userToSubmit.id = this.user.id;
+    // userToSubmit.authorityNames = this.user.authorityNames;
+    // userToSubmit.username = this.user.username;
 
     return userToSubmit;
   }

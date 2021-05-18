@@ -41,7 +41,6 @@ export class WebapiService {
       .catch((error) => console.log(error.message));
   }
   async GetProduts(): Promise<any> {
-    debugger
     let retorno : any;
     let options = {headers: this.header}
     const url = `${this.apiURL}` + '/products';
@@ -83,7 +82,6 @@ export class WebapiService {
   GetMany(): Observable<ProductsModel[]> {
    const url = `${this.apiURL}` + '/products';
     //console.log("Fetch my contacts URL is " + url);
-debugger
     let ret =  this.http.get<ProductsModel[]>(url);
     return ret;
   }
