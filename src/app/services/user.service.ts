@@ -7,12 +7,15 @@ import { tap, shareReplay } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { DateService } from "./date.service";
 import jwt_decode from "jwt-decode";
-import { User, UserModel } from "../models/user";
-
+import { User } from "../models/user";
+import { UserModel } from "../models/UserModel";
 const CreateUserSocial =
   "https://loja-crias-api.herokuapp.com/users/CreateUserSocial";
 const GetUserDetail =
   "https://loja-crias-api.herokuapp.com/users/GetUserDetail/";
+const SaveUsersDetails =
+  "https://loja-crias-api.herokuapp.com/users/SaveUsersDetails";
+const SaveUsersDetailsLocal = "http://localhost:3000/users/SaveUsersDetails";
 @Injectable({ providedIn: "root" })
 export class UsersService {
   constructor(
@@ -21,9 +24,10 @@ export class UsersService {
     private dateService: DateService
   ) {}
 
+  // tslint:disable-next-line: no-shadowed-variable
   async CreateUserSocial(User: UserModel): Promise<any> {
     let ret: any;
-    let param = {
+    const param = {
       email: User.email,
       password: User.password,
       idToken: User.idToken,
@@ -45,18 +49,50 @@ export class UsersService {
     return ret;
   }
   async getUserInformation(email: string): Promise<any> {
-    let options = { param: { email: email } };
     let ret: any;
-    let url = GetUserDetail + email;
+    const url = GetUserDetail + email;
     await this.http
       .get(url)
       .toPromise()
-      .then((data) => {ret = data["data"]
-
+      .then((data) => {
+        ret = data["data"];
       })
       .catch((err) => console.log(err));
-    console.log(ret)
-      return ret;
+    return ret;
+  }
 
+  async SaveUsersDetails(user: UserModel): Promise<any> {
+    let ret: any;
+        const param = {
+      id: user.id,
+      dataNascimento: user.UserDetail.dataNascimento,
+      dataIniciacao: user.UserDetail.dataIniciacao,
+      orixa: user.UserDetail.orixa,
+      telefone: user.UserDetail.telefone,
+      profissao: user.UserDetail.profissao,
+      escolaridade: user.UserDetail.escolaridade,
+      diaPagamento: user.UserDetail.diaPagamento,
+      valorPagamento: user.UserDetail.valorPagamento,
+      endereco: user.UserDetail.endereco,
+      empregado: user.UserDetail.empregado,
+      obs: user.UserDetail.obs,
+      numero: user.UserDetail.numero,
+      complemento: user.UserDetail.complemento,
+      cidade: user.UserDetail.cidade,
+      estado: user.UserDetail.estado,
+      cep: user.UserDetail.cep,
+      iduserDetail: user.UserDetail.iduserDetail
+    };
+    console.log(param)
+    await this.http
+      .post(SaveUsersDetailsLocal, param)
+      .toPromise()
+      .then((dt) => {
+        ret = dt;
+      })
+      .catch((err) => {
+        ret = err;
+      });
+    return ret;
   }
 }

@@ -16,8 +16,8 @@ const USER_EMAIL = "user_email";
 
 const EXPIRES_AT = "expires_at";
 const apiURL = "https://loja-crias-api.herokuapp.com/users/login";
-// const checkLogin = "https://loja-crias-api.herokuapp.com/users/CheckLogin";
-const checkLogin = "http://localhost:3000/users/CheckLogin";
+const checkLogin = "https://loja-crias-api.herokuapp.com/users/CheckLogin";
+//const checkLogin = "http://localhost:3000/users/CheckLogin";
 
 
 @Injectable({ providedIn: "root" })
@@ -92,7 +92,6 @@ export class AuthenticationService {
   }
 
   private setSession(authResult: JwtResponse) {
-    debugger
     // const expiresAt = authResult.expirationDate;
     const expiresAt = authResult.expirationDate;
     //console.log("Token expires at " + expiresAt);

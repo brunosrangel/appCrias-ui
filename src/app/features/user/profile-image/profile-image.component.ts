@@ -28,11 +28,11 @@ export class ProfileImageComponent implements OnInit {
     private imageService: ImageService, private alertService: AlertService) { }
 
   ngOnInit() {
-    this.user = this.userService.user;
+    // this.user = this.userService.user;
 
-    this.userService.fetchProfileImage(this.user.id)
-      .subscribe(image => this.createImage(image),
-        err => this.handleImageRetrievalError(err));
+    // this.userService.fetchProfileImage(this.user.id)
+    //   .subscribe(image => this.createImage(image),
+    //     err => this.handleImageRetrievalError(err));
   }
 
   private handleImageRetrievalError(err: Error) {

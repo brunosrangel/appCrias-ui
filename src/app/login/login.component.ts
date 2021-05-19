@@ -24,7 +24,7 @@ import {
   SocialAuthService,
   SocialUser,
 } from "angularx-social-login";
-import { UserModel } from "../models/user";
+import { UserModel } from "../models/UserModel";
 
 @Component({
   selector: "app-login",

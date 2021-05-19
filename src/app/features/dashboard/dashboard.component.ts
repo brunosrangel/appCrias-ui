@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { UserModel } from "src/app/models/UserModel";
 import { UsersService } from "../../services/user.service";
 const TOKEN_NAME = "id_token";
 const USER_NAME = "user_name";
@@ -13,7 +14,7 @@ const USER_EMAIL = "user_email";
 })
 export class DashboardComponent implements OnInit {
   userName;
-  userDetail: any;
+  userDetail: UserModel = new UserModel();
   urlImage ;
   constructor(private _userservice: UsersService) {}
 
@@ -22,14 +23,15 @@ export class DashboardComponent implements OnInit {
     this.getUserDetail();
   }
 
-  getUserDetail() {
-    this._userservice
+  async getUserDetail() {
+   await this._userservice
       .getUserInformation(localStorage.getItem(USER_EMAIL))
       .then((dt) => {
-        this.userDetail = dt;
+        this.userDetail = dt as UserModel;
          this.urlImage = this.userDetail.imageUrl;
+
       })
       .catch((err) => console.log(err));
-    console.log(this.userDetail);
+
   }
 }

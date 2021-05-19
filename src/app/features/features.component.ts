@@ -51,6 +51,5 @@ export class FeaturesComponent implements  OnDestroy {
            this.urlImage = this.userDetail.imageUrl;
         })
         .catch((err) => console.log(err));
-      console.log(this.userDetail);
     }
 }

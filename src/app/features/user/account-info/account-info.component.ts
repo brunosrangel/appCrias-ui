@@ -1,319 +1,347 @@
-import { HttpErrorResponse } from "@angular/common/http";
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
   Validators,
   FormControl,
-} from "@angular/forms";
-import { Country } from "../../../models/country";
-import { State } from "../../../models/state";
-import { User, UserModel } from "../../../models/user";
-import { GeoService } from "../../../services/geo.service";
-import { AlertService } from "../../../ui/alert/alert.service";
-import { UserService } from "../../service/user.service";
-import { UsersService } from "../../../services/user.service";
-import { Endereco } from "src/app/models/endereco";
+} from '@angular/forms';
+import { Country } from '../../../models/country';
+import { State } from '../../../models/state';
+import { User } from '../../../models/user';
+import { UserModel } from '../../../models/UserModel';
+import { UserDetailModel } from '../../../models/UserDetailModel';
+import { GeoService } from '../../../services/geo.service';
+import { AlertService } from '../../../ui/alert/alert.service';
+import { UserService } from '../../service/user.service';
+import { UsersService } from '../../../services/user.service';
+import { Endereco } from 'src/app/models/endereco';
 
-const TOKEN_NAME = "id_token";
-const USER_NAME = "user_name";
-const USER_PROFILE = "user_profile";
-const USER_EMAIL = "user_email";
+const USER_NAME = 'user_name';
+const USER_EMAIL = 'user_email';
 
 @Component({
-  selector: "app-account-info",
-  templateUrl: "./account-info.component.html",
-  styleUrls: ["./account-info.component.css"],
+  selector: 'app-account-info',
+  templateUrl: './account-info.component.html',
+  styleUrls: ['./account-info.component.css'],
 })
 export class AccountInfoComponent implements OnInit {
   states: State[] = [];
+  escolaridade: any[] = [];
   countries: Country[] = [];
-  formSubmitted: boolean = false;
+  formSubmitted = false;
   user: UserModel = new UserModel();
-  dataLoading: boolean = true;
+  dataLoading = true;
   userName: string;
-  userDetail: User;
+  userDetail: any;
   searchAddress: Endereco;
-  form = new FormGroup({
-    dataIniciacao: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    dataNascimento: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    diaPagamento: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-
-    email: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    empregado: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    cep: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    endereco: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    escolaridade: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    nome: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    obs: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    orixa: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    profissao: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    telefone: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-    valorPagamento: new FormControl("", [
-      // Validators.required,
-      // Validators.email,
-    ]),
-  });
+  form = new FormGroup({});
 
   constructor(
-    private fb: FormBuilder,
     private geoService: GeoService,
-    private userService: UserService,
     private alertService: AlertService,
     private _userservice: UsersService
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.initForm();
     this.userName = localStorage.getItem(USER_NAME);
     await this.getUserDetail();
-
+    this.listaEscolaridade();
+    console.log(this.escolaridade);
     this.form.patchValue({
-      nome: this.userDetail["nome"],
-      email: this.userDetail["email"],
-      // description: 'spome description'
+      nome: this.userDetail['nome'],
+      email: this.userDetail['email'],
+      telefone: this.userDetail['telefone'],
+      cep: this.userDetail['cep'],
+      endereco: this.userDetail['endereco'],
+      numero: this.userDetail['numeroEndereco'],
+      complemento: this.userDetail['complemento'],
+      cidade: this.userDetail['cidade'],
+      estado: this.userDetail['estado'],
+      obs: this.userDetail['obs'],
+      profissao: this.userDetail['profissao'],
+      escolaridade: this.userDetail['escolaridade'],
+      orixa: this.userDetail['orixa'],
+      valorPagamento: this.userDetail['valorPagamento'],
+      diaPagamento: this.userDetail['diaPagamento'],
+    });
+    this.getEndereco(this.userDetail['cep']);
+  }
+  listaEscolaridade() {
+    this.escolaridade.push({
+      nome: 'Primeiro Grau Completo',
+      value: 'Primeiro Grau Completo',
+    });
+    this.escolaridade.push({
+      nome: 'Segundo Grau Completo',
+      value: 'Segundo Grau Completo',
+    });
+    this.escolaridade.push({
+      nome: 'Terceiro Grau Completo',
+      value: 'Terceiro Grau Completo',
+    });
+    this.escolaridade.push({
+      nome: 'Pós Graduação',
+      value: 'Pós Graduação',
+    });
+    this.escolaridade.push({
+      nome: 'Mestrado',
+      value: 'Mestrado',
+    });
+    this.escolaridade.push({
+      nome: 'Doutorado',
+      value: 'Doutorado',
     });
   }
   async getUserDetail() {
     await this._userservice
       .getUserInformation(localStorage.getItem(USER_EMAIL))
       .then((dt) => {
-        this.userDetail = dt;
+        this.userDetail = dt as UserModel;
+        console.log(this.userDetail);
       })
       .catch((err) => console.log(err))
       .finally(() => (this.dataLoading = false));
   }
   getEndereco(cep: string) {
-    let dt: any;
-
+    this.dataLoading = true;
     this.geoService.EnderecoPorCep(cep).subscribe(
       (address) => {
         if (address.erro === true) {
           this.searchAddress = undefined;
-          this.alertService.error("Cep Não encontrado.", "Ops...");
+          this.alertService.error('Cep Não encontrado.', 'Ops...');
+          this.limpaPreecheEnderco();
+          this.dataLoading = false;
         } else {
           this.searchAddress = address;
-          debugger
+          this.preecheEnderco(address);
         }
       },
       (error) => {
-        this.alertService.error("Error: ${error.message}.", "Ops...");
+        this.alertService.error(`Error: ${error.message}.', 'Ops...`);
         this.searchAddress = undefined;
+        this.dataLoading = false;
       }
     );
-
   }
-  preecheEnderco()
-  {
-    
+  preecheEnderco(endereco: Endereco) {
+    this.form.patchValue({
+      endereco: endereco.logradouro,
+      bairro: endereco.bairro,
+      cidade: endereco.localidade,
+      estado: endereco.uf,
+    });
+    this.dataLoading = false;
   }
-  private initGeos() {
-    this.countries = this.geoService.allCountries;
-    this.states = this.geoService.allStates;
+  limpaPreecheEnderco() {
+    this.form.patchValue({
+      endereco: '',
+      bairro: '',
+      cidade: '',
+      estado: '',
+    });
+    this.dataLoading = false;
+  }
+  private initForm() {
+    this.form = new FormGroup({
+      dataIniciacao: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      dataNascimento: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      diaPagamento: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
 
-    if (!this.countries || !this.states) {
-      this.loadGeos();
-    } else {
-      this.dataLoading = false;
-    }
+      email: new FormControl(
+        { value: '', disabled: true },
+        Validators.required
+      ),
+      empregado: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      cep: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      endereco: new FormControl(
+        { value: '', disabled: true },
+        Validators.required
+      ),
+      numero: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      complemento: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      bairro: new FormControl(
+        { value: '', disabled: true },
+        Validators.required
+      ),
+      cidade: new FormControl(
+        { value: '', disabled: true },
+        Validators.required
+      ),
+      estado: new FormControl(
+        { value: '', disabled: true },
+        Validators.required
+      ),
+      escolaridade: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      nome: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      obs: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      orixa: new FormControl('', [
+        Validators.required,
+        // Validators.email,
+      ]),
+      profissao: new FormControl('', [
+        Validators.required,
+        // Validators.email,
+      ]),
+      telefone: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+      valorPagamento: new FormControl('', [
+        // Validators.required,
+        // Validators.email,
+      ]),
+    });
   }
 
-  private loadGeos() {
-    this.geoService.initializeAllStates().subscribe(
-      (states: State[]) => this.handleStateResponse(states),
-      (err) => this.handleGeoError(err)
-    );
-
-    this.geoService.initializeAllCountries().subscribe(
-      (countries: Country[]) => this.handleCountryResponse(countries),
-      (err) => this.handleGeoError(err)
-    );
-  }
-
-  private handleStateResponse(states: State[]) {
-    this.states = states;
-    if (this.states && this.countries) this.dataLoading = false;
-  }
-
-  private handleCountryResponse(countries: Country[]) {
-    this.countries = countries;
-    if (this.states && this.countries) this.dataLoading = false;
-  }
-
-  private handleGeoError(err: Error) {
-    console.error("Problem getting geographies!", err);
-  }
-
-  // private initForm() {
-
-  //   this.form = new FormGroup({
-  //     dataIniciacao: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     dataNascimento: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     diaPagamento: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-
-  //     email: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     empregado: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     endereco: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     escolaridade: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     nome: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     obs: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     orixa: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     profissao: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     telefone: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //     valorPagamento: new FormControl("", [
-  //       // Validators.required,
-  //       // Validators.email,
-  //     ]),
-  //   });
-  // }
-
-  update() {
+  async update() {
     this.formSubmitted = true;
-    console.log("Clearing alerts");
+    console.log('Clearing alerts');
     this.alertService.clear();
-
-    let userToSubmit: User = this.createUserToSubmit();
-
-    this.userService.update(this.user.id, userToSubmit).subscribe(
-      (updatedUser: User) => this.handleUserUpdateResponse(updatedUser),
-      (err) => this.handleUserUpdateError(err)
-    );
-  }
-
-  private handleUserUpdateResponse(updatedUser: User) {
-    if (updatedUser) {
-      this.user = updatedUser;
-      this.alertService.success("User info successfully updated!");
-      this.scrollToTop();
-    }
-
-    this.formSubmitted = false;
-  }
-
-  private handleUserUpdateError(err: Error) {
-    console.error("Problem updating user!", err);
-    this.alertService.error("Problem updating user info!");
-    this.scrollToTop();
-    this.formSubmitted = false;
-
-    this.showServerSideErrors(err);
-  }
-
-  private showServerSideErrors(err: Error) {
-    if (err instanceof HttpErrorResponse) {
-      let httpError: HttpErrorResponse = <HttpErrorResponse>err;
-
-      if (httpError.error && httpError.error.errors) {
-        let allErrors = httpError.error.errors;
-
-        for (let i = 0; i < allErrors.length; i++) {
-          let currentError = allErrors[i];
-          this.form.controls[currentError.field].setErrors({ incorrect: true });
+    let ret: any;
+    const userToSubmit = this.createUserToSubmit();
+    await this._userservice
+      .SaveUsersDetails(userToSubmit)
+      .then((dt) => {
+        ret = dt;
+        if (dt === undefined) {
+          this.alertService.error('Erro ao Alterar dados');
+          this.formSubmitted = false;
+        } else {
+          window.scroll(0,0);
+          this.alertService.success(dt.message);
+          this.formSubmitted = false;
         }
-      }
-
-      this.form.markAllAsTouched();
-    }
+      })
+      .catch((err) => {
+        this.alertService.error(err);
+        this.formSubmitted = false;
+      });
   }
 
-  private scrollToTop() {
-    const element = document.querySelector("mat-sidenav-content") || window;
-    element.scrollTo(0, 0);
-  }
+  private createUserToSubmit(): any {
+    const userToSubmit = new UserModel();
+    userToSubmit.UserDetail = new UserDetailModel();
 
-  private createUserToSubmit(): User {
-    let userToSubmit: User = {} as User;
+    userToSubmit.id =
+      this.userDetail['userId'] === undefined
+        ? null
+        : this.userDetail['userId'];
 
-    // userToSubmit.city = this.form.controls['city'].value;
-    // userToSubmit.email = this.form.controls['email'].value;
-    // userToSubmit.firstName = this.form.controls['firstName'].value;
-    // userToSubmit.lastName = this.form.controls['lastName'].value;
-    // userToSubmit.phoneNumber = this.form.controls['phoneNumber'].value;
-    // userToSubmit.state = this.form.controls['state'].value;
-    // userToSubmit.street1 = this.form.controls['street1'].value;
-    // userToSubmit.street2 = this.form.controls['street2'].value;
-    // userToSubmit.zip = this.form.controls['zip'].value;
-    // userToSubmit.country = this.form.controls['country'].value;
+    userToSubmit.UserDetail.iduserDetail =
+      this.userDetail['iduserDetail'] === undefined
+        ? null
+        : this.userDetail['iduserDetail'];
 
-    // //add back data not shown on the form
-    // userToSubmit.id = this.user.id;
-    // userToSubmit.authorityNames = this.user.authorityNames;
-    // userToSubmit.username = this.user.username;
+    userToSubmit.UserDetail.dataNascimento =
+      this.form.controls['dataNascimento'].value === undefined
+        ? null
+        : this.form.controls['dataNascimento'].value;
+        userToSubmit.email =
+      this.form.controls['email'].value === undefined
+        ? null
+        : this.form.controls['email'].value;
+    userToSubmit.UserDetail.empregado =
+      this.form.controls['empregado'].value === undefined
+        ? null
+        : this.form.controls['empregado'].value;
 
+    userToSubmit.UserDetail.endereco =
+      this.form.controls['endereco'].value === undefined
+        ? null
+        : this.form.controls['endereco'].value;
+    userToSubmit.UserDetail.complemento =
+      this.form.controls['complemento'].value === undefined
+        ? null
+        : this.form.controls['complemento'].value;
+
+    userToSubmit.UserDetail.numero =
+      this.form.controls['numero'].value === undefined
+        ? null
+        : this.form.controls['numero'].value;
+    userToSubmit.UserDetail.cep =
+      this.form.controls['cep'].value === undefined
+        ? null
+        : this.form.controls['cep'].value;
+    userToSubmit.UserDetail.estado =
+      this.form.controls['estado'].value === undefined
+        ? null
+        : this.form.controls['estado'].value;
+    userToSubmit.UserDetail.cidade =
+      this.form.controls['cidade'].value === undefined
+        ? null
+        : this.form.controls['cidade'].value;
+    userToSubmit.UserDetail.orixa =
+      this.form.controls['orixa'].value === undefined
+        ? null
+        : this.form.controls['orixa'].value;
+    userToSubmit.UserDetail.escolaridade =
+      this.form.controls['escolaridade'].value === undefined
+        ? null
+        : this.form.controls['escolaridade'].value;
+    userToSubmit.UserDetail.dataNascimento =
+      this.form.controls['dataNascimento'].value === undefined
+        ? null
+        : this.form.controls['dataNascimento'].value;
+    userToSubmit.UserDetail.dataIniciacao =
+      this.form.controls['dataIniciacao'].value === undefined
+        ? null
+        : this.form.controls['dataIniciacao'].value;
+    userToSubmit.UserDetail.valorPagamento =
+      this.form.controls['valorPagamento'].value === undefined
+        ? null
+        : this.form.controls['valorPagamento'].value;
+
+    userToSubmit.UserDetail.profissao =
+      this.form.controls['profissao'].value === undefined
+        ? null
+        : this.form.controls['profissao'].value;
+
+    userToSubmit.UserDetail.telefone =
+      this.form.controls['telefone'].value === undefined
+        ? null
+        : this.form.controls['telefone'].value;
+
+    userToSubmit.UserDetail.obs =
+      this.form.controls['obs'].value === undefined
+        ? null
+        : this.form.controls['obs'].value;
+
+        userToSubmit.UserDetail.diaPagamento =
+      this.form.controls['diaPagamento'].value === undefined
+        ? null
+        : this.form.controls['diaPagamento'].value;
     return userToSubmit;
   }
 }

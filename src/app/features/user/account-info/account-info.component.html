@@ -4,21 +4,32 @@
       <div>
         <h4>Informações Gerais</h4>
       </div>
-      <div style="margin-bottom:20px">
+      <div style="margin-bottom: 20px">
         <alert></alert>
       </div>
       <div class="absolute-center" *ngIf="dataLoading">
         <mat-spinner [diameter]="80"></mat-spinner>
       </div>
       <div *ngIf="!dataLoading">
-        <div>
+        <div class="example-container">
           <form [formGroup]="form" (ngSubmit)="update()">
             <div class="vertical-form-field">
               <div class="label">Nome Completo</div>
               <div>
-                <mat-form-field appearance="fill" class="no-label-field" style="width:30%">
-                  <input formControlName="nome"   matInput placeholder="Enter first name" maxlength="50">
-                  <mat-error *ngIf="form.controls['nome'].invalid">O nome é importante !</mat-error>
+                <mat-form-field
+                  appearance="fill"
+                  class="no-label-field"
+                  style="width: 30%"
+                >
+                  <input
+                    formControlName="nome"
+                    matInput
+                    placeholder="Enter first name"
+                    maxlength="50"
+                  />
+                  <mat-error *ngIf="form.controls['nome'].invalid"
+                    >O nome é importante !</mat-error
+                  >
                 </mat-form-field>
               </div>
             </div>
@@ -26,9 +37,20 @@
             <div class="vertical-form-field">
               <div class="label">Email</div>
               <div>
-                <mat-form-field appearance="fill" class="no-label-field" style="width:30%">
-                  <input formControlName="email" matInput placeholder="Email é importante" maxlength="50">
-                  <mat-error *ngIf="form.controls['email'].invalid">Email é importante</mat-error>
+                <mat-form-field
+                  appearance="fill"
+                  class="no-label-field"
+                  style="width: 30%"
+                >
+                  <input
+                    formControlName="email"
+                    matInput
+                    placeholder="Email é importante"
+                    maxlength="50"
+                  />
+                  <mat-error *ngIf="form.controls['email'].invalid"
+                    >Email é importante</mat-error
+                  >
                 </mat-form-field>
               </div>
             </div>
@@ -36,103 +58,252 @@
             <div class="vertical-form-field">
               <div class="label">Telefone</div>
               <div>
-                <mat-form-field appearance="fill" class="no-label-field" style="width:50%">
-                  <input formControlName="telefone" matInput placeholder="Preencha o telefone" maxlength="20">
-                  <mat-error *ngIf="form.controls['telefone'].invalid">Telefone é importante</mat-error>
+                <mat-form-field
+                  appearance="fill"
+                  class="no-label-field"
+                  style="width: 50%"
+                >
+                  <input
+                    formControlName="telefone"
+                    matInput
+                    placeholder="Preencha o telefone"
+                    maxlength="20"
+                  />
+                  <mat-error *ngIf="form.controls['telefone'].invalid"
+                    >Telefone é importante</mat-error
+                  >
                 </mat-form-field>
               </div>
             </div>
             <div class="vertical-form-field">
-              <div class="label">Endereço Completo</div>
-              <div>
-                <mat-form-field appearance="fill" class="no-label-field" style="width:50%">
-                  <input formControlName="cep" matInput placeholder="preencha o cep"  (blur)="getEndereco(form.controls['cep'].value)" maxlength="100">
-                  <mat-error *ngIf="form.controls['cep'].invalid">Endereço é importante</mat-error>
-                </mat-form-field>
-              </div>
+              <div class="label">CEP</div>
+
+              <mat-form-field
+                appearance="fill"
+                class="no-label-field"
+                style="width: 10%"
+              >
+                <input
+                  formControlName="cep"
+                  matInput
+                  placeholder="Somente os números"
+                  (blur)="getEndereco(form.controls['cep'].value)"
+                  maxlength="8"
+                />
+                <mat-error *ngIf="form.controls['cep'].invalid"
+                  >Cep é importante</mat-error
+                >
+              </mat-form-field>
             </div>
-             <div class="vertical-form-field">
-              <div class="label">Endereço Completo</div>
-              <div>
-                <mat-form-field appearance="fill" class="no-label-field" style="width:50%">
-                  <input formControlName="endereco" matInput disabled>
-                  <mat-error *ngIf="form.controls['endereco'].invalid">Endereço é importante</mat-error>
-                </mat-form-field>
+            <div class="endereco-div">
+              <div class="vertical-form-field">
+                <div class="label">Endereço</div>
+                <div>
+                  <mat-form-field
+                    appearance="fill"
+                    class="no-label-field-endereco"
+                    style="width: 50%"
+                  >
+                    <input
+                      formControlName="endereco"
+                      matInput
+                      disabled="{true}"
+                    />
+                    <mat-error *ngIf="form.controls['endereco'].invalid"
+                      >Endereço é importante</mat-error
+                    >
+                  </mat-form-field>
+                </div>
               </div>
-            </div>
-<!--
-            <div class="vertical-form-field">
-              <div class="label">City</div>
-              <div>
-                <mat-form-field appearance="fill" class="no-label-field" style="width:30%">
-                  <input formControlName="city" matInput placeholder="Enter city" maxlength="50">
-                  <mat-error *ngIf="form.controls['city'].invalid">Please enter a valid city</mat-error>
-                </mat-form-field>
+              <div class="vertical-form-field">
+                <div class="label">Número</div>
+                <div>
+                  <mat-form-field
+                    appearance="fill"
+                    class="no-label-field-endereco"
+                    [floatLabel]="form.controls['endereco']"
+                  >
+                    <input formControlName="numero" matInput />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="vertical-form-field">
+                <div class="label">Complemento</div>
+                <div>
+                  <mat-form-field
+                    appearance="fill"
+                    class="no-label-field-endereco"
+                    style="width: 10%"
+                  >
+                    <input formControlName="complemento" matInput />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="vertical-form-field">
+                <div class="label">Bairro</div>
+                <div>
+                  <mat-form-field
+                    appearance="fill"
+                    class="no-label-field-endereco"
+                    style="width: 50%"
+                    [floatLabel]="form.controls['endereco']"
+                  >
+                    <input formControlName="bairro" matInput />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="vertical-form-field">
+                <div class="label">Cidade</div>
+                <div>
+                  <mat-form-field
+                    appearance="fill"
+                    class="no-label-field-endereco"
+                    style="width: 30%"
+                  >
+                    <input formControlName="cidade" matInput />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="vertical-form-field">
+                <div class="label">Estado</div>
+                <div>
+                  <mat-form-field appearance="fill" style="width: 50%">
+                    <input formControlName="estado" matInput />
+                  </mat-form-field>
+                </div>
               </div>
             </div>
 
             <div class="vertical-form-field">
-              <div class="label">State</div>
+              <div class="label">Profissão</div>
+              <div>
+                <mat-form-field
+                  appearance="fill"
+                  class="no-label-field"
+                  style="width: 30%"
+                >
+                  <input
+                    formControlName="profissao"
+                    matInput
+                    placeholder="Entre com a Profissão"
+                    maxlength="50"
+                  />
+                  <mat-error *ngIf="form.controls['profissao'].invalid"
+                    >Entre com uma profissão</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="vertical-form-field">
+              <div class="label">Orixá</div>
+              <div>
+                <mat-form-field
+                  appearance="fill"
+                  class="no-label-field"
+                  style="width: 30%"
+                >
+                  <input
+                    formControlName="orixa"
+                    matInput
+                    placeholder="Entre com seu Orixá"
+                    maxlength="50"
+                  />
+                  <mat-error *ngIf="form.controls['orixa'].invalid"
+                    >Entre com seu Orixá</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="vertical-form-field">
+              <div class="label">Esolaridade</div>
               <div>
                 <mat-form-field appearance="fill" class="no-label-field">
-                  <mat-select formControlName="state" placeholder="Select a state">
-                    <mat-option *ngFor="let state of states" [value]="state.twoLetterCode">
-                      {{state.name}}
+                  <mat-select
+                    formControlName="escolaridade"
+                    placeholder="Select a Escolaridade"
+                  >
+                    <mat-option
+                      *ngFor="let escolaridade of escolaridade"
+                      [value]="escolaridade.nome"
+                    >
+                      {{ escolaridade.nome }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="form.controls['state'].invalid">Please select a state</mat-error>
+                  <mat-error *ngIf="form.controls['escolaridade'].invalid"
+                    >Please select a state</mat-error
+                  >
                 </mat-form-field>
               </div>
             </div>
 
             <div class="vertical-form-field">
-              <div class="label">Zip</div>
+              <div class="label">
+                Melhor dia para Pagamento das mensalidades
+              </div>
               <div>
-                <mat-form-field appearance="fill" class="no-label-field" style="width:30%">
-                  <input formControlName="zip" matInput placeholder="Enter zip code" maxlength="12">
-                  <mat-error *ngIf="form.controls['zip'].invalid">Please enter a valid zip code</mat-error>
+                <mat-form-field
+                  appearance="fill"
+                  class="no-label-field"
+                  style="width: 30%"
+                >
+                  <input
+                    formControlName="diaPagamento"
+                    matInput
+                    placeholder="Entre com o melhor dia para o pagamento"
+                    maxlength="2"
+                  />
                 </mat-form-field>
               </div>
             </div>
-
             <div class="vertical-form-field">
-              <div class="label">Country</div>
+              <div class="label">Valor das mensalidades</div>
               <div>
-                <mat-form-field appearance="fill" class="no-label-field">
-                  <mat-select formControlName="country" placeholder="Select a country">
-                    <mat-option *ngFor="let country of countries" [value]="country.twoLetterCode">
-                      {{country.name}}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="form.controls['country'].invalid">Please select a country</mat-error>
+                <mat-form-field
+                  appearance="fill"
+                  class="no-label-field"
+                  style="width: 30%"
+                >
+                  <input
+                    formControlName="valorPagamento"
+                    matInput
+                    placeholder="Entre com valor do pagamento"
+                    suffix="R$ "
+                    mask="separator.2"
+                    thousandSeparator=","
+                  />
                 </mat-form-field>
               </div>
             </div>
-
             <div class="vertical-form-field">
-              <div class="label">Email</div>
+              <div class="label">Observações</div>
               <div>
-                <mat-form-field appearance="fill" class="no-label-field" style="width:40%">
-                  <input formControlName="email" matInput placeholder="Enter email address" maxlength="50">
-                  <mat-error *ngIf="form.controls['email'].invalid">Please enter a valid email address</mat-error>
+                <mat-form-field
+                  appearance="fill"
+                  class="no-label-field"
+                  style="width: 30%"
+                >
+                  <input
+                    formControlName="obs"
+                    matInput
+                    placeholder="Observações e considerações"
+                  />
                 </mat-form-field>
               </div>
-            </div>
-
-            <div class="vertical-form-field">
-              <div class="label">Phone</div>
-              <div>
-                <mat-form-field appearance="fill" class="no-label-field" style="width:40%">
-                  <input formControlName="phoneNumber" matInput placeholder="Enter phone number" maxlength="20">
-                  <mat-error *ngIf="form.controls['phoneNumber'].invalid">Please enter a valid phone number</mat-error>
-                </mat-form-field>
-              </div>
-            </div>-->
-            <div style="margin-top:10px; margin-bottom:10px">
-              <button type="submit" *ngIf="!formSubmitted" [disabled]="!form.valid" mat-raised-button color="primary">Save Info</button>
-              <mat-spinner *ngIf="formSubmitted" [diameter]="50"></mat-spinner>
             </div>
           </form>
+          <div>
+            <button
+              type="submit"
+              *ngIf="!formSubmitted"
+              [disabled]="!form.valid"
+              mat-raised-button
+              color="primary"
+              (click)="update()"
+            >
+              Salvar
+            </button>
+            <mat-spinner *ngIf="formSubmitted" [diameter]="50"></mat-spinner>
+          </div>
         </div>
       </div>
     </div>

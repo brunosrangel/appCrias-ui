@@ -4,7 +4,10 @@
   </div> -->
 <div>
  <h2>Olá {{userName}}</h2>
- <div *ngIf="userDetail.status == 5">
-   Seu cadastro encontra-se desatualizado.
+ <div *ngIf="userDetail['status'] == 5">
+  <h1>Seu cadastro encontra-se desatualizado.</h1>
+ </div>
+ <div *ngIf="userDetail['status'] != 5">
+  <h1>Seu cadastro encontra-se Atualizado .</h1>
  </div>
 </div>

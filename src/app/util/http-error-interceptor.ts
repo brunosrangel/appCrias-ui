@@ -28,7 +28,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         } else if (returnedError instanceof HttpErrorResponse) {
           errorMessage = `Error Status ${returnedError.status}: ${returnedError.message}`;
           handled = this.handleServerSideError(returnedError);
-        } 
+        }
 
         console.error(errorMessage ? errorMessage : returnedError);
 
@@ -48,11 +48,11 @@ export class HttpErrorInterceptor implements HttpInterceptor {
       case 401:
         //we don't want to redirect people to the login page when they're already on
         //the login page
-        if (this.router.url != '/login') {
-          this.alertService.info("Please login again.", { keepAfterRouteChange: false });
-          this.authenticationService.logout();
-          handled = true;
-        }
+        // if (this.router.url != '/login') {
+        //   this.alertService.info("Please login again.", { keepAfterRouteChange: false });
+        //   this.authenticationService.logout();
+        //   handled = true;
+        // }
         break;
       case 403:
         this.alertService.info("Please login again.", { keepAfterRouteChange: false });
