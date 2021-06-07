@@ -1,29 +1,30 @@
-import { BrowserModule } from "@angular/platform-browser";
-import { FlexLayoutModule } from "@angular/flex-layout";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatListModule } from "@angular/material/list";
-import { MatIconModule } from "@angular/material/icon";
-import { MenuListItemComponent } from "./features/ui/menu-list-item/menu-list-item.component";
-import { NgModule } from "@angular/core";
-import { AppComponent } from "./app.component";
-import { AppRoutingModule } from "./app-routing.module";
-import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { FeaturesComponent } from "./features/features.component";
-import { MatDialogModule } from "@angular/material/dialog";
-import { MatButtonModule } from "@angular/material/button";
-import { ConfirmationDialogComponent } from "./ui/confirmation-dialog/confirmation-dialog.component";
-import { JwtInterceptor } from "./util/jwt-interceptor";
-import { HttpErrorInterceptor } from "./util/http-error-interceptor";
-import { NotFoundComponent } from "./NotFound/NotFound.component";
+import { BrowserModule } from '@angular/platform-browser';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MenuListItemComponent } from './features/ui/menu-list-item/menu-list-item.component';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FeaturesComponent } from './features/features.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { ConfirmationDialogComponent } from './ui/confirmation-dialog/confirmation-dialog.component';
+import { JwtInterceptor } from './util/jwt-interceptor';
+import { HttpErrorInterceptor } from './util/http-error-interceptor';
+import { NotFoundComponent } from './NotFound/NotFound.component';
 
 import {
   GoogleLoginProvider,
   FacebookLoginProvider,
   SocialLoginModule,
   SocialAuthServiceConfig,
-} from "angularx-social-login";
+} from 'angularx-social-login';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -75,17 +76,17 @@ import {
 
   providers: [
     {
-      provide: "SocialAuthServiceConfig",
+      provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: false,
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider("205795066712-hnhs12bsm3kpj4qvvupj4ekdq5soitad.apps.googleusercontent.com"),
+            provider: new GoogleLoginProvider(environment.idGoogle),
           },
           {
             id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider("800768753896037"),
+            provider: new FacebookLoginProvider(environment.idFacebook),
           },
         ],
       } as SocialAuthServiceConfig,

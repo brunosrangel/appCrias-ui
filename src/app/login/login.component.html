@@ -1,3 +1,7 @@
+<div class="absolute-center" *ngIf="dataLoading">
+  <mat-spinner [diameter]="80"></mat-spinner>
+</div>
+<div *ngIf="!dataLoading"></div>
 <div fxFlex fxLayout="column" fxLayoutGap="0px">
   <div fxLayout="row wrap">
     <div fxFlex="50" fxFlex.lt-md="100" fxLayout="column">
@@ -20,6 +24,7 @@
       fxLayout="column"
       class="mat-app-background"
     >
+
       <div fxLayout="column" fxLayoutAlign="center" style="margin-top: 30px">
         <!-- <div fxLayout="row" fxLayoutAlign="center">
           <h3>Bem vindo ao APP Crias </h3>
@@ -31,13 +36,14 @@
       </div>
 
       <div fxLayout="column" fxLayoutAlign="center">
+
         <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
           <div style="margin-bottom: 15px; height: 75px">
             <alert></alert>
           </div>
           <div fxLayoutAlign="center">
             <mat-form-field style="width: 50%" appearance="fill">
-              <mat-label>Enter username</mat-label>
+              <mat-label>Login</mat-label>
               <input formControlName="username" matInput />
               <mat-error *ngIf="form.controls['username'].invalid"
                 >Please enter a valid username</mat-error
@@ -46,7 +52,7 @@
           </div>
           <div fxLayoutAlign="center" style="margin-top: 10px">
             <mat-form-field style="width: 50%" appearance="fill">
-              <mat-label>Enter password</mat-label>
+              <mat-label>Senha</mat-label>
               <input type="password" formControlName="password" matInput />
               <mat-error *ngIf="form.controls['password'].invalid"
                 >Please enter a valid password</mat-error
@@ -74,9 +80,9 @@
           <button mat-button color="primary" (click)="signInWithGoogle()">
             <img src="../../assets/icons8-google-24.png" />
           </button>
-          <button mat-button color="primary" (click)="signInWithFB()">
+          <!-- <button mat-button color="primary" (click)="signInWithFB()">
             <img src="../../assets/icons8-facebook-24.png" />
-          </button>
+          </button> -->
         </div>
       </div>
     </div>

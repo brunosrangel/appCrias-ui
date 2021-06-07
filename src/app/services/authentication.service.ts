@@ -17,7 +17,6 @@ const USER_EMAIL = "user_email";
 const EXPIRES_AT = "expires_at";
 const apiURL = "https://loja-crias-api.herokuapp.com/users/login";
 const checkLogin = "https://loja-crias-api.herokuapp.com/users/CheckLogin";
-//const checkLogin = "http://localhost:3000/users/CheckLogin";
 
 
 @Injectable({ providedIn: "root" })
@@ -50,7 +49,7 @@ export class AuthenticationService {
    return ret;
   }
   async login(username: string, password: string): Promise<JwtResponse> {
-    let jwtResponse: JwtResponseC = new JwtResponseC();
+    const jwtResponse: JwtResponseC = new JwtResponseC();
     let jwt: JwtResponse;
     let user: UserModel = new UserModel();
     let param = { email: username, password: password };
@@ -60,11 +59,14 @@ export class AuthenticationService {
       .then((data) => {
         let dec = jwt_decode(data["token"]);
         user.email = dec["email"];
+        jwtResponse.profile = dec['perfil'];
+        jwtResponse.perfil = dec["perfil"];
         jwtResponse.expirationDate = dec["exp"];
         jwtResponse.token = data["token"];
         jwtResponse.user = user as User;
         jwtResponse.UserName = dec["nome"];
-        jwtResponse.profile = dec["perfi"];
+
+        debugger;
         jwt = jwtResponse as JwtResponse;
         shareReplay();
         this.setSession(jwt);
@@ -85,22 +87,18 @@ export class AuthenticationService {
         this.dateService.getShortDateAndTimeDisplay(decoded["exp"])
     );
 
-    // localStorage.setItem("id_token", token);
-    // localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()));
+
     localStorage.setItem(TOKEN_NAME, token);
     localStorage.setItem(EXPIRES_AT, JSON.stringify(expiresAt.valueOf()));
   }
 
   private setSession(authResult: JwtResponse) {
-    // const expiresAt = authResult.expirationDate;
     const expiresAt = authResult.expirationDate;
-    //console.log("Token expires at " + expiresAt);
-    //console.log("Token date and time is " + this.dateService.getShortDateAndTimeDisplay(expiresAt));
 
     localStorage.setItem(TOKEN_NAME, authResult.token);
     localStorage.setItem(EXPIRES_AT, JSON.stringify(expiresAt.valueOf()));
     localStorage.setItem(USER_NAME, authResult.UserName);
-    localStorage.setItem(USER_PROFILE, authResult.profile);
+    localStorage.setItem(USER_PROFILE, authResult.profile.toString());
     localStorage.setItem(USER_EMAIL, authResult.user.email);
 
 
@@ -109,6 +107,9 @@ export class AuthenticationService {
   clearStorage() {
     localStorage.removeItem(TOKEN_NAME);
     localStorage.removeItem(EXPIRES_AT);
+    localStorage.removeItem(USER_NAME);
+    localStorage.removeItem(USER_EMAIL);
+    localStorage.removeItem(USER_PROFILE);
   }
 
   logout() {

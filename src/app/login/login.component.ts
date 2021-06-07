@@ -9,15 +9,6 @@ import { UsersService } from "../services/user.service";
 import { AlertService } from "../ui/alert/alert.service";
 import { HttpErrorResponse } from "@angular/common/http";
 
-// import { SocialAuthService } from 'lib';
-// import { SocialUser } from 'lib';
-// import {
-//   GoogleLoginProvider,
-//   FacebookLoginProvider,
-//   AmazonLoginProvider,
-//   VKLoginProvider,
-//   MicrosoftLoginProvider
-// } from 'lib';
 import {
   FacebookLoginProvider,
   GoogleLoginProvider,
@@ -33,11 +24,12 @@ import { UserModel } from "../models/UserModel";
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
-  formSubmitted: boolean = false;
+  formSubmitted = false;
   user: SocialUser;
   GoogleLoginProvider = GoogleLoginProvider;
   loggedIn: boolean;
   datauser = new UserModel();
+  dataLoading = false;
   constructor(
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
@@ -155,6 +147,7 @@ export class LoginComponent implements OnInit {
   }
   signInWithGoogle(): void {
     let userData;
+    this.dataLoading = true;
 
     this.authService
       .signIn(GoogleLoginProvider.PROVIDER_ID)

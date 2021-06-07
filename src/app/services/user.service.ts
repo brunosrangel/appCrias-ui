@@ -9,13 +9,17 @@ import { DateService } from "./date.service";
 import jwt_decode from "jwt-decode";
 import { User } from "../models/user";
 import { UserModel } from "../models/UserModel";
-const CreateUserSocial =
-  "https://loja-crias-api.herokuapp.com/users/CreateUserSocial";
-const GetUserDetail =
-  "https://loja-crias-api.herokuapp.com/users/GetUserDetail/";
-const SaveUsersDetails =
-  "https://loja-crias-api.herokuapp.com/users/SaveUsersDetails";
-const SaveUsersDetailsLocal = "http://localhost:3000/users/SaveUsersDetails";
+
+// tslint:disable-next-line: quotemark
+const CreateUserSocial = "https://loja-crias-api.herokuapp.com/users/CreateUserSocial";
+// tslint:disable-next-line: quotemark
+const GetUserDetail =  "https://loja-crias-api.herokuapp.com/users/GetUserDetail/";
+// tslint:disable-next-line: quotemark
+const SaveUsersDetails = "https://loja-crias-api.herokuapp.com/users/SaveUsersDetails";
+
+//const SaveUsersDetailsLocal = "http://localhost:3000/users/SaveUsersDetails";
+//const CreateUserSocial = "http://localhost:3000/users/CreateUserSocial";
+
 @Injectable({ providedIn: "root" })
 export class UsersService {
   constructor(
@@ -24,7 +28,7 @@ export class UsersService {
     private dateService: DateService
   ) {}
 
-  // tslint:disable-next-line: no-shadowed-variable
+
   async CreateUserSocial(User: UserModel): Promise<any> {
     let ret: any;
     const param = {
@@ -85,7 +89,7 @@ export class UsersService {
     };
     console.log(param)
     await this.http
-      .post(SaveUsersDetailsLocal, param)
+      .post(SaveUsersDetails, param)
       .toPromise()
       .then((dt) => {
         ret = dt;

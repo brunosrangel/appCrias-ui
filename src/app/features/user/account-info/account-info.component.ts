@@ -48,8 +48,7 @@ export class AccountInfoComponent implements OnInit {
     this.userName = localStorage.getItem(USER_NAME);
     await this.getUserDetail();
     this.listaEscolaridade();
-    console.log(this.escolaridade);
-    this.form.patchValue({
+      this.form.patchValue({
       nome: this.userDetail['nome'],
       email: this.userDetail['email'],
       telefone: this.userDetail['telefone'],
@@ -66,7 +65,11 @@ export class AccountInfoComponent implements OnInit {
       valorPagamento: this.userDetail['valorPagamento'],
       diaPagamento: this.userDetail['diaPagamento'],
     });
-    this.getEndereco(this.userDetail['cep']);
+    console.log(this.userDetail['cep'])
+    if(this.userDetail['cep'] !== '' && this.userDetail['cep'] !== null){
+      this.getEndereco(this.userDetail['cep']);
+    }
+
   }
   listaEscolaridade() {
     this.escolaridade.push({
@@ -99,9 +102,9 @@ export class AccountInfoComponent implements OnInit {
       .getUserInformation(localStorage.getItem(USER_EMAIL))
       .then((dt) => {
         this.userDetail = dt as UserModel;
-        console.log(this.userDetail);
+
       })
-      .catch((err) => console.log(err))
+      .catch((err) => this.alertService.error(err.message))
       .finally(() => (this.dataLoading = false));
   }
   getEndereco(cep: string) {

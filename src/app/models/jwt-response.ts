@@ -5,14 +5,16 @@ export interface JwtResponse {
     token: string ;
     expirationDate: number;
     UserName : string;
-    profile : string;
+    profile : number;
+    perfil: number;
     user: User;
 }
 export class JwtResponseC {
 
   token: string ;
   expirationDate: number;
-  UserName : string;
-  profile : string;
+  UserName: string;
+  profile: number;
+  perfil: number;
   user: User;
 }

@@ -10,7 +10,7 @@
       <div class="absolute-center" *ngIf="dataLoading">
         <mat-spinner [diameter]="80"></mat-spinner>
       </div>
-      <div *ngIf="!dataLoading">
+      <div *ngIf="!dataLoading"> </div>
         <div class="example-container">
           <form [formGroup]="form" (ngSubmit)="update()">
             <div class="vertical-form-field">
@@ -308,4 +308,4 @@
       </div>
     </div>
   </div>
-</div>
+

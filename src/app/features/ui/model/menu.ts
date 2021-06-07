@@ -17,6 +17,7 @@ export let menu: NavItem[] = [
     displayName: 'Contacts',
     iconName: 'group',
     route: 'contacts',
+    profile : 1,
     children: [
       {
         displayName: 'View Contacts',
@@ -33,15 +34,16 @@ export let menu: NavItem[] = [
     ]
   },
   {
-    displayName: 'User',
+    displayName: 'Dados Usuário',
     iconName: 'face',
     route: 'user',
+    profile : 0,
     children: [
       {
         displayName: 'Informações do Usuário',
         iconName: 'account_box',
         route: 'user/account-info',
-        profile : 1
+        profile : 0
       },
       {
         displayName: 'Profile Image',
@@ -52,7 +54,8 @@ export let menu: NavItem[] = [
     ]
   },
   {
-      displayName: 'Sign Out',
-      iconName: 'highlight_off'
+      displayName: 'Sair',
+      iconName: 'highlight_off',
+      profile : 0
   }
 ];

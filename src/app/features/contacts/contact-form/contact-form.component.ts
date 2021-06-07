@@ -27,6 +27,7 @@ export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
   formSubmitted: boolean = false;
   allFormsValid: boolean = false;
   pageTitle: string = 'Add Contact';
+  dataLoading: boolean = true;
 
   @ViewChild(BasicInfoFormComponent) basicInfoComponent: BasicInfoFormComponent;
   @ViewChild(AddressesFormComponent) addressesComponent: AddressesFormComponent;
@@ -87,7 +88,7 @@ export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.currentStepIndex == BASIC_INFO_INDEX) {
       if (this.basicInfoComponent.basicInfoFormGroup.valid) {
         this.clearIconError(BASIC_INFO_INDEX);
-      }   
+      }
     }
   }
 
@@ -136,7 +137,7 @@ export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
     return (<HTMLElement>node);
   }
 
-  private validateForms() {    
+  private validateForms() {
     this.errorMessages = [];
 
     this.validateBasicInfoForm();
@@ -149,7 +150,7 @@ export class ContactFormComponent implements OnInit, AfterViewInit, OnDestroy {
     Object.keys(basicInfoForm.controls).forEach(key => {
       const controlErrors: ValidationErrors = basicInfoForm.get(key).errors;
       if (controlErrors != null) {
-        this.addErrorByKey(key);    
+        this.addErrorByKey(key);
       }
     });
   }

@@ -5,5 +5,8 @@
 export const environment = {
   production: false,
   baseUserServiceUrl: 'http://localhost',
-  baseGeoServiceUrl: 'http://localhost'
+  baseGeoServiceUrl: 'http://localhost',
+  idGoogle : '205795066712-hnhs12bsm3kpj4qvvupj4ekdq5soitad.apps.googleusercontent.com',
+  webApi : 'http://localhost:3000',
+  idFacebook : '800768753896037'
 };

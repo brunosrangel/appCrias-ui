@@ -38,6 +38,7 @@ export class MenuListItemComponent implements OnInit {
     }
 
     ngOnInit() {
+
         this.navService.getCurrentUrl().subscribe((url: string) => {
             if (this.item.route) {
                 this.expanded = url.indexOf(`/${this.item.route}`) === 0;
@@ -55,7 +56,7 @@ export class MenuListItemComponent implements OnInit {
             } else {
                 this.handleSpecial(item);
             }
-        } 
+        }
 
         if (item.children && item.children.length) {
             this.expanded = !this.expanded;
@@ -63,13 +64,13 @@ export class MenuListItemComponent implements OnInit {
     }
 
     handleSpecial(item: NavItem) {
-        if (item.displayName == 'Sign Out') {
+        if (item.displayName === 'Sair') {
             this.handleSignOut();
         }
     }
 
     handleSignOut() {
-        const dialogData = new ConfirmationDialogModel('Confirm', 'Are you sure you want to logout?');
+        const dialogData = new ConfirmationDialogModel('Confirm', 'Quer sair mesmo?');
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             maxWidth: '400px',
             closeOnNavigation: true,
